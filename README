@@ -1,0 +1,3 @@
+TO DO:
+-----
+Right now, the $perms paramater in mysql::grant_access is higly dependent on order. If we don't input the permissions in the exact order mysql records them, the command will run every time puppet runs (every 15 mins by default). Will look into that later. 
