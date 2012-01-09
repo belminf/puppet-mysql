@@ -16,12 +16,11 @@ define mysql::grant_access ( $user, $password, $db, $mysql_root_password, $host=
 		command =>  "${mysql_root_cmd} \"REVOKE ALL ON ${db}.* FROM '${user}'@'${host}';\"",
 		returns => [0,1],
 		require => Service['mysqld'],
-		notify =>  Exec["grant_db_access-${name}"],
+		notify =>  [Exec["grant_db_access-${name}"],  Exec['set-mysql-password'],],
 	}
 
 
 }
-
 
 define mysql::create_db ( $db, $mysql_root_password ) { 
 
@@ -31,6 +30,6 @@ define mysql::create_db ( $db, $mysql_root_password ) {
 		path => ['/bin', '/usr/bin'],
 		unless => "${mysql_root_cmd} ${db} \"exit\"",
 		command => "${mysql_root_cmd} \"CREATE DATABASE ${db};\"",
-		require => Service['mysqld'],
+		require => [Service['mysqld'], Exec['set-mysql-password'],],
 	}
 }
